@@ -29,11 +29,13 @@ for i in range(len(db)):
     #Convert each feature value to float to avoid warning messages
     #--> add your Python code here
     X = []
+    limit = 0
     for j in range(len(db)):
         row = []
         if i != j:
             for k in range(20):
-                row.append(float(db[j][k]) + 2.0)
+                row.append(float(db[j][k]))
+                limit = max(limit, db[j][k])
             X.append(row)
 
     #Transform the original training classes to numbers and add them to the vector Y.
@@ -44,11 +46,11 @@ for i in range(len(db)):
     Y = []
     for j in range(len(db)):
         if j != i:
-            Y.append(0) if db[j][-1] == "ham" else Y.append(1)
+            Y.append(limit + 1) if db[j][-1] == "ham" else Y.append(limit + 2)
             
     #Store the test sample of this iteration in the vector testSample
     #--> add your Python code here
-    testSample = [float(db[i][j]) + 2.0 for j in range(20)]
+    testSample = [float(db[i][j]) for j in range(20)]
 
     #Fitting the knn to the data using k = 1 and Euclidean distance (L2 norm)
     #--> add your Python code here
@@ -63,7 +65,7 @@ for i in range(len(db)):
 
     #Compare the prediction with the true label of the test instance to start calculating the error rate.
     #--> add your Python code here
-    testVal = 0 if db[i][20] == "ham" else 1
+    testVal = limit + 1 if db[i][20] == "ham" else limit + 2
     if class_predicted == testVal:
         correctCount += 1
     else:
